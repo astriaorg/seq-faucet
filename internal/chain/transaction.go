@@ -3,13 +3,15 @@ package chain
 import (
 	"context"
 	"crypto/ecdsa"
+	"crypto/ed25519"
+	"errors"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	client "github.com/astriaorg/go-sequencer-client"
+	sqproto "github.com/astriaorg/go-sequencer-client/proto"
+
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type TxBuilder interface {
@@ -18,30 +20,32 @@ type TxBuilder interface {
 }
 
 type TxBuild struct {
-	client      bind.ContractTransactor
-	privateKey  *ecdsa.PrivateKey
-	signer      types.Signer
-	fromAddress common.Address
+	sequencerClient client.Client
+	chainID         *big.Int
+	privateKey      *ecdsa.PrivateKey
+	signer          client.Signer
+	fromAddress     common.Address
 }
 
 func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey, chainID *big.Int) (TxBuilder, error) {
-	client, err := ethclient.Dial(provider)
+	if chainID == nil {
+		return nil, errors.New("must provide chainID")
+	}
+
+	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
 	}
 
-	if chainID == nil {
-		chainID, err = client.ChainID(context.Background())
-		if err != nil {
-			return nil, err
-		}
-	}
+	ed25519PrivateKey := ed25519.PrivateKey(privateKey.D.Bytes())
+	signer := client.NewSigner(ed25519PrivateKey)
 
 	return &TxBuild{
-		client:      client,
-		privateKey:  privateKey,
-		signer:      types.NewEIP155Signer(chainID),
-		fromAddress: crypto.PubkeyToAddress(privateKey.PublicKey),
+		sequencerClient: *sequencerClient,
+		chainID:         chainID,
+		privateKey:      privateKey,
+		signer:          *signer,
+		fromAddress:     crypto.PubkeyToAddress(privateKey.PublicKey),
 	}, nil
 }
 
@@ -50,30 +54,36 @@ func (b *TxBuild) Sender() common.Address {
 }
 
 func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (common.Hash, error) {
-	nonce, err := b.client.PendingNonceAt(ctx, b.Sender())
+	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
-		return common.Hash{}, err
-	}
-
-	gasLimit := uint64(21000)
-	gasPrice, err := b.client.SuggestGasPrice(ctx)
-	if err != nil {
-		return common.Hash{}, err
+		panic(err)
 	}
 
 	toAddress := common.HexToAddress(to)
-	unsignedTx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		To:       &toAddress,
-		Value:    value,
-		Gas:      gasLimit,
-		GasPrice: gasPrice,
-	})
-
-	signedTx, err := types.SignTx(unsignedTx, b.signer, b.privateKey)
-	if err != nil {
-		return common.Hash{}, err
+	unsignedTx := &sqproto.UnsignedTransaction{
+		Nonce: nonce,
+		Actions: []*sqproto.Action{
+			{
+				Value: &sqproto.Action_TransferAction{
+					TransferAction: &sqproto.TransferAction{
+						To: toAddress.Bytes(),
+						Amount: &sqproto.Uint128{
+							Lo: value.Uint64(),
+							Hi: value.Rsh(value, 64).Uint64(),
+						},
+					},
+				},
+			},
+		},
 	}
 
-	return signedTx.Hash(), b.client.SendTransaction(ctx, signedTx)
+	// signedTx, err := types.SignTx(unsignedTx, b.signer, b.privateKey)
+	signedTx, err := b.signer.SignTransaction(unsignedTx)
+	if err != nil {
+		panic(err)
+	}
+	result, err := b.sequencerClient.BroadcastTxSync(ctx, signedTx)
+
+	// FIXME - is this correct conversion here?
+	return common.HexToHash(string(result.Hash)), err
 }
