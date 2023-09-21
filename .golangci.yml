@@ -1,0 +1,22 @@
+run:
+  timeout: 5m
+  skip-dirs:
+    - .github
+    - web
+
+linters-settings:
+  misspell:
+    locale: US
+
+linters:
+  disable-all: true
+  enable:
+    - gosimple
+    - govet
+    - ineffassign
+    - goconst
+    - goimports
+    - misspell
+    - revive
+    - unconvert
+    - unused

@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build-web": "cd web && yarn install && yarn vite build"
+  }
+}
