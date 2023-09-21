@@ -5,7 +5,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"math/big"
 	"os"
 	"os/signal"
 	"strings"
@@ -18,7 +17,6 @@ import (
 
 var (
 	appVersion = "v1.1.0"
-	chainIDMap = map[string]int{"goerli": 5, "sepolia": 11155111}
 
 	httpPortFlag = flag.Int("httpport", 8080, "Listener port to serve HTTP connection")
 	proxyCntFlag = flag.Int("proxycount", 0, "Count of reverse proxies in front of the server")
@@ -48,12 +46,8 @@ func Execute() {
 	if err != nil {
 		panic(fmt.Errorf("failed to read private key: %w", err))
 	}
-	var chainID *big.Int
-	if value, ok := chainIDMap[strings.ToLower(*netnameFlag)]; ok {
-		chainID = big.NewInt(int64(value))
-	}
 
-	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, chainID)
+	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey)
 	if err != nil {
 		panic(fmt.Errorf("cannot connect to web3 provider: %w", err))
 	}

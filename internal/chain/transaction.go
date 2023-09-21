@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"crypto/ed25519"
-	"errors"
 	"math/big"
 
 	client "github.com/astriaorg/go-sequencer-client"
@@ -21,17 +20,12 @@ type TxBuilder interface {
 
 type TxBuild struct {
 	sequencerClient client.Client
-	chainID         *big.Int
 	privateKey      *ecdsa.PrivateKey
 	signer          client.Signer
 	fromAddress     common.Address
 }
 
-func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey, chainID *big.Int) (TxBuilder, error) {
-	if chainID == nil {
-		return nil, errors.New("must provide chainID")
-	}
-
+func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey) (TxBuilder, error) {
 	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
@@ -42,7 +36,6 @@ func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey, chainID *big.In
 
 	return &TxBuild{
 		sequencerClient: *sequencerClient,
-		chainID:         chainID,
 		privateKey:      privateKey,
 		signer:          *signer,
 		fromAddress:     crypto.PubkeyToAddress(privateKey.PublicKey),
