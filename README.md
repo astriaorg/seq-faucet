@@ -46,27 +46,21 @@ go build -o seq-faucet
 **Use private key to fund users**
 
 ```bash
-./seq-faucet -httpport 8080 -wallet.provider http://localhost:8545 -wallet.privkey privkey
-```
-
-**Use keystore to fund users**
-
-```bash
-./seq-faucet -httpport 8080 -wallet.provider http://localhost:8545 -wallet.keyjson keystore -wallet.keypass password.txt
+./seq-faucet -wallet.provider tcp://sequencer.localdev.me:80 -wallet.privkey privkey
 ```
 
 ### Configuration
 
 You can configure the funder by using environment variables instead of command-line flags as follows:
 ```bash
-export WEB3_PROVIDER=https://some.rpc.endpoint
+export WEB3_PROVIDER=tcp://sequencer.localdev.me:80
 export PRIVATE_KEY=0x...
 ```
 
 or
 
 ```bash
-export WEB3_PROVIDER=https://some.rpc.endpoint
+export WEB3_PROVIDER=tcp://sequencer.localdev.me:80
 export KEYSTORE=path/to/keystore
 echo "your keystore password" > `pwd`/password.txt
 ```
@@ -92,13 +86,13 @@ The following are the available command-line flags(excluding above wallet flags)
 ### Docker deployment
 
 ```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=https://some.rpc.endpoint -e PRIVATE_KEY=0x... astriaorg/seq-faucet:1.1.0
+docker run -d -p 8080:8080 -e WEB3_PROVIDER=tcp://sequencer.localdev.me:80 -e PRIVATE_KEY=0x... astriaorg/seq-faucet:1.1.0
 ```
 
 or
 
 ```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=https://some.rpc.endpoint -e KEYSTORE=path/to/keystore -v `pwd`/keystore:/app/keystore -v `pwd`/password.txt:/app/password.txt astriaorg/seq-faucet:1.1.0
+docker run -d -p 8080:8080 -e WEB3_PROVIDER=tcp://sequencer.localdev.me:80 -e KEYSTORE=path/to/keystore -v `pwd`/keystore:/app/keystore -v `pwd`/password.txt:/app/password.txt astriaorg/seq-faucet:1.1.0
 ```
 
 #### Build the Docker image
