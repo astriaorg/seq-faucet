@@ -70,7 +70,6 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (comm
 		},
 	}
 
-	// signedTx, err := types.SignTx(unsignedTx, b.signer, b.privateKey)
 	signedTx, err := b.signer.SignTransaction(unsignedTx)
 	if err != nil {
 		panic(err)
