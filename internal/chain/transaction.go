@@ -6,7 +6,7 @@ import (
 	"crypto/ed25519"
 	"math/big"
 
-	client "github.com/astriaorg/go-sequencer-client"
+	client "github.com/astriaorg/go-sequencer-client/client"
 	sqproto "github.com/astriaorg/go-sequencer-client/proto"
 
 	"github.com/ethereum/go-ethereum/common"

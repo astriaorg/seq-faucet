@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/LK4D4/trylock v0.0.0-20191027065348-ff7e133a5c54
 	github.com/agiledragon/gomonkey/v2 v2.9.0
-	github.com/astriaorg/go-sequencer-client v0.0.0-20230921201241-5666013eda52
+	github.com/astriaorg/go-sequencer-client v0.0.0-20230922154010-04c37942538f
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/jellydator/ttlcache/v2 v2.11.1
 	github.com/sirupsen/logrus v1.9.0

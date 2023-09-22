@@ -584,6 +584,8 @@ github.com/ashanbrown/forbidigo v1.3.0/go.mod h1:vVW7PEdqEFqapJe95xHkTfB1+XvZXBF
 github.com/ashanbrown/makezero v1.1.1/go.mod h1:i1bJLCRSCHOcOa9Y6MyF2FTfMZMFdHvxKHxgO5Z1axI=
 github.com/astriaorg/go-sequencer-client v0.0.0-20230921201241-5666013eda52 h1:19EI5NZSSu0nP57qncZqaiohHy/uzpxCBT20Q2xKA1U=
 github.com/astriaorg/go-sequencer-client v0.0.0-20230921201241-5666013eda52/go.mod h1:sD6r0a5zYiWi4PFnDs3GGaQFnZuP6Vg3TgEmr65bn9I=
+github.com/astriaorg/go-sequencer-client v0.0.0-20230922154010-04c37942538f h1:QbUha42AU4I5PyAlHXhajjdRp11o2ssKZpslzgWqlNA=
+github.com/astriaorg/go-sequencer-client v0.0.0-20230922154010-04c37942538f/go.mod h1:sD6r0a5zYiWi4PFnDs3GGaQFnZuP6Vg3TgEmr65bn9I=
 github.com/aws/aws-sdk-go v1.15.11/go.mod h1:mFuSZ37Z9YOHbQEwBWztmVzqXrEkub65tZoCYDt7FT0=
 github.com/aws/aws-sdk-go v1.15.27/go.mod h1:mFuSZ37Z9YOHbQEwBWztmVzqXrEkub65tZoCYDt7FT0=
 github.com/aws/aws-sdk-go v1.15.90/go.mod h1:es1KtYUFs7le0xQ3rOihkuoVD90z7D0fR2Qm4S00/gU=
