@@ -109,6 +109,7 @@
       <div class="container has-text-centered">
         <div class="column is-6 is-offset-3">
           <h1 class="title">
+            <!-- FIXME - what are we naming this token? -->
             Receive {faucetInfo.payout} RIA per request
           </h1>
           <h2 class="subtitle is-6">
