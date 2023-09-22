@@ -104,7 +104,7 @@ docker run -d -p 8080:8080 -e WEB3_PROVIDER=https://some.rpc.endpoint -e KEYSTOR
 #### Build the Docker image
 
 ```bash
-docker buildx build -t ghcr.io/astriaorg/astria-faucet:0.0.1-local .
+docker buildx build -t ghcr.io/astriaorg/seq-faucet:0.0.1-local .
 ```
 
 ## License
