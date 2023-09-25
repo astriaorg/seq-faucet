@@ -2,7 +2,6 @@ package chain
 
 import (
 	"context"
-	"crypto/ecdsa"
 	"crypto/ed25519"
 	"math/big"
 
@@ -10,7 +9,6 @@ import (
 	sqproto "github.com/astriaorg/go-sequencer-client/proto"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type TxBuilder interface {
@@ -20,25 +18,24 @@ type TxBuilder interface {
 
 type TxBuild struct {
 	sequencerClient client.Client
-	privateKey      *ecdsa.PrivateKey
+	privateKey      *ed25519.PrivateKey
 	signer          client.Signer
 	fromAddress     common.Address
 }
 
-func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey) (TxBuilder, error) {
+func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey) (TxBuilder, error) {
 	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
 	}
 
-	ed25519PrivateKey := ed25519.PrivateKey(privateKey.D.Bytes())
-	signer := client.NewSigner(ed25519PrivateKey)
+	signer := client.NewSigner(*privateKey)
 
 	return &TxBuild{
 		sequencerClient: *sequencerClient,
 		privateKey:      privateKey,
 		signer:          *signer,
-		fromAddress:     crypto.PubkeyToAddress(privateKey.PublicKey),
+		fromAddress:     signer.Address(),
 	}, nil
 }
 
@@ -77,5 +74,6 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (comm
 	result, err := b.sequencerClient.BroadcastTxSync(ctx, signedTx)
 
 	// FIXME - is this correct conversion here?
+	// FIXME - is this the correct hash?
 	return common.HexToHash(string(result.Hash)), err
 }

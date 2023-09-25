@@ -1,15 +1,13 @@
 package cmd
 
 import (
-	"crypto/ecdsa"
+	"crypto/ed25519"
+	"encoding/hex"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"os/signal"
-	"strings"
-
-	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/astriaorg/seq-faucet/internal/chain"
 	"github.com/astriaorg/seq-faucet/internal/server"
@@ -27,8 +25,6 @@ var (
 	intervalFlag = flag.Int("faucet.minutes", 1440, "Number of minutes to wait between funding rounds")
 	netnameFlag  = flag.String("faucet.name", "testnet", "Network name to display on the frontend")
 
-	keyJSONFlag  = flag.String("wallet.keyjson", os.Getenv("KEYSTORE"), "Keystore file to fund user requests with")
-	keyPassFlag  = flag.String("wallet.keypass", "password.txt", "Passphrase text file to decrypt keystore")
 	privKeyFlag  = flag.String("wallet.privkey", os.Getenv("PRIVATE_KEY"), "Private key hex to fund user requests with")
 	providerFlag = flag.String("wallet.provider", os.Getenv("WEB3_PROVIDER"), "Endpoint for Ethereum JSON-RPC connection")
 )
@@ -42,7 +38,7 @@ func init() {
 }
 
 func Execute() {
-	privateKey, err := getPrivateKeyFromFlags()
+	privateKey, err := getPrivateKeyFromFlag()
 	if err != nil {
 		panic(fmt.Errorf("failed to read private key: %w", err))
 	}
@@ -59,25 +55,21 @@ func Execute() {
 	<-c
 }
 
-func getPrivateKeyFromFlags() (*ecdsa.PrivateKey, error) {
-	if *privKeyFlag != "" {
-		hexkey := *privKeyFlag
-		if chain.Has0xPrefix(hexkey) {
-			hexkey = hexkey[2:]
-		}
-		return crypto.HexToECDSA(hexkey)
-	} else if *keyJSONFlag == "" {
-		return nil, errors.New("missing private key or keystore")
+func getPrivateKeyFromFlag() (*ed25519.PrivateKey, error) {
+	if *privKeyFlag == "" {
+		return nil, errors.New("no private key provided")
 	}
 
-	keyfile, err := chain.ResolveKeyfilePath(*keyJSONFlag)
-	if err != nil {
-		return nil, err
+	hexkey := *privKeyFlag
+	if chain.Has0xPrefix(hexkey) {
+		hexkey = hexkey[2:]
 	}
-	password, err := os.ReadFile(*keyPassFlag)
+
+	privateKeyBytes, err := hex.DecodeString(hexkey)
 	if err != nil {
 		return nil, err
 	}
 
-	return chain.DecryptKeyfile(keyfile, strings.TrimRight(string(password), "\r\n"))
+	privateKey := ed25519.PrivateKey(privateKeyBytes)
+	return &privateKey, nil
 }
