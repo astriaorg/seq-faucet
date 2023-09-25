@@ -7,13 +7,14 @@ import (
 
 	client "github.com/astriaorg/go-sequencer-client/client"
 	sqproto "github.com/astriaorg/go-sequencer-client/proto"
+	"github.com/cometbft/cometbft/libs/bytes"
 
 	"github.com/ethereum/go-ethereum/common"
 )
 
 type TxBuilder interface {
 	Sender() common.Address
-	Transfer(ctx context.Context, to string, value *big.Int) (common.Hash, error)
+	Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error)
 }
 
 type TxBuild struct {
@@ -43,7 +44,7 @@ func (b *TxBuild) Sender() common.Address {
 	return b.fromAddress
 }
 
-func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (common.Hash, error) {
+func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error) {
 	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
 		panic(err)
@@ -73,7 +74,5 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (comm
 	}
 	result, err := b.sequencerClient.BroadcastTxSync(ctx, signedTx)
 
-	// FIXME - is this correct conversion here?
-	// FIXME - is this the correct hash?
-	return common.HexToHash(string(result.Hash)), err
+	return result.Hash, err
 }
