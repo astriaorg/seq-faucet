@@ -3,6 +3,7 @@ package chain
 import (
 	"context"
 	"crypto/ed25519"
+	"encoding/binary"
 	"math/big"
 
 	client "github.com/astriaorg/go-sequencer-client/client"
@@ -50,6 +51,12 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 		panic(err)
 	}
 
+	buf := make([]byte, 16)
+	value.FillBytes(buf)
+
+	leastSignificant64 := binary.BigEndian.Uint64(buf[8:])
+	mostSignificant64 := binary.BigEndian.Uint64(buf[:8])
+
 	toAddress := common.HexToAddress(to)
 	unsignedTx := &sqproto.UnsignedTransaction{
 		Nonce: nonce,
@@ -59,8 +66,8 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 					TransferAction: &sqproto.TransferAction{
 						To: toAddress.Bytes(),
 						Amount: &sqproto.Uint128{
-							Lo: value.Uint64(),
-							Hi: value.Rsh(value, 64).Uint64(),
+							Lo: leastSignificant64,
+							Hi: mostSignificant64,
 						},
 					},
 				},
