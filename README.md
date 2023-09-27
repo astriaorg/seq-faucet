@@ -10,7 +10,7 @@ The faucet is a web application with the goal of distributing small amounts of E
 
 ## Features
 
-* Allow to configure the funding account via private key or keystore
+* Allow to configure the funding account via private key
 * Asynchronous processing Txs to achieve parallel execution of user requests
 * Rate limiting by ETH address and IP address as a precaution against spam
 * Prevent X-Forwarded-For spoofing by specifying the count of reverse proxies
@@ -46,29 +46,15 @@ go build -o seq-faucet
 **Use private key to fund users**
 
 ```bash
-./seq-faucet -httpport 8080 -wallet.provider http://localhost:8545 -wallet.privkey privkey
-```
-
-**Use keystore to fund users**
-
-```bash
-./seq-faucet -httpport 8080 -wallet.provider http://localhost:8545 -wallet.keyjson keystore -wallet.keypass password.txt
+./seq-faucet -wallet.provider tcp://sequencer.localdev.me:80 -wallet.privkey privkey
 ```
 
 ### Configuration
 
 You can configure the funder by using environment variables instead of command-line flags as follows:
 ```bash
-export WEB3_PROVIDER=https://some.rpc.endpoint
+export WEB3_PROVIDER=tcp://sequencer.localdev.me:80
 export PRIVATE_KEY=0x...
-```
-
-or
-
-```bash
-export WEB3_PROVIDER=https://some.rpc.endpoint
-export KEYSTORE=path/to/keystore
-echo "your keystore password" > `pwd`/password.txt
 ```
 
 Then run the faucet application without the wallet command-line flags:
@@ -92,19 +78,13 @@ The following are the available command-line flags(excluding above wallet flags)
 ### Docker deployment
 
 ```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=https://some.rpc.endpoint -e PRIVATE_KEY=0x... astriaorg/seq-faucet:1.1.0
-```
-
-or
-
-```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=https://some.rpc.endpoint -e KEYSTORE=path/to/keystore -v `pwd`/keystore:/app/keystore -v `pwd`/password.txt:/app/password.txt astriaorg/seq-faucet:1.1.0
+docker run -d -p 8080:8080 -e WEB3_PROVIDER=tcp://sequencer.localdev.me:80 -e PRIVATE_KEY=0x... astriaorg/seq-faucet:1.1.0
 ```
 
 #### Build the Docker image
 
 ```bash
-docker buildx build -t ghcr.io/astriaorg/astria-faucet:0.0.1-local .
+docker buildx build -t ghcr.io/astriaorg/seq-faucet:0.0.1-local .
 ```
 
 ## License

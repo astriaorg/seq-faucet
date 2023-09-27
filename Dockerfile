@@ -1,4 +1,5 @@
 FROM node:lts-alpine as frontend
+LABEL org.opencontainers.image.source https://github.com/astriaorg/seq-faucet
 
 WORKDIR /frontend-build
 

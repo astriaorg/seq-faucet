@@ -1,20 +1,16 @@
 name: Build and Publish Docker image
 
-# Trigger on pushes to astria branch, new semantic version tags, and pull request updates
+# Trigger on pushes to main branch and new semantic version tags
 on:
   workflow_dispatch:
   push:
     branches:
-      - "astria"
+      - "main"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+"
-  # trigger on pull request updates when target is `astria` branch
-  pull_request:
-    branches:
-      - "astria"
 
 jobs:
   build-and-publish-latest:
@@ -47,13 +43,13 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/astriaorg/ria-faucet
+            ghcr.io/astriaorg/seq-faucet
           tags: |
             type=ref,event=pr
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=sha
-            # set latest tag for `astria` branch
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'astria') }}
+            # set latest tag for `main` branch
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -61,8 +57,7 @@ jobs:
           # https://github.com/docker/build-push-action/issues/820#issuecomment-1455687416
           provenance: false
           context: .
-          # It takes a long time to build the arm image right now, so we only build it on tags which is what we use for releases, or on merges to the default branch.
-          platforms: ${{ (contains(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/astria') && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}

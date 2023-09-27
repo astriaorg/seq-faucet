@@ -2,46 +2,42 @@ package chain
 
 import (
 	"context"
-	"crypto/ecdsa"
+	"crypto/ed25519"
+	"encoding/binary"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	client "github.com/astriaorg/go-sequencer-client/client"
+	sqproto "github.com/astriaorg/go-sequencer-client/proto"
+	"github.com/cometbft/cometbft/libs/bytes"
+
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 type TxBuilder interface {
 	Sender() common.Address
-	Transfer(ctx context.Context, to string, value *big.Int) (common.Hash, error)
+	Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error)
 }
 
 type TxBuild struct {
-	client      bind.ContractTransactor
-	privateKey  *ecdsa.PrivateKey
-	signer      types.Signer
-	fromAddress common.Address
+	sequencerClient client.Client
+	privateKey      *ed25519.PrivateKey
+	signer          client.Signer
+	fromAddress     common.Address
 }
 
-func NewTxBuilder(provider string, privateKey *ecdsa.PrivateKey, chainID *big.Int) (TxBuilder, error) {
-	client, err := ethclient.Dial(provider)
+func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey) (TxBuilder, error) {
+	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
 	}
 
-	if chainID == nil {
-		chainID, err = client.ChainID(context.Background())
-		if err != nil {
-			return nil, err
-		}
-	}
+	signer := client.NewSigner(*privateKey)
 
 	return &TxBuild{
-		client:      client,
-		privateKey:  privateKey,
-		signer:      types.NewEIP155Signer(chainID),
-		fromAddress: crypto.PubkeyToAddress(privateKey.PublicKey),
+		sequencerClient: *sequencerClient,
+		privateKey:      privateKey,
+		signer:          *signer,
+		fromAddress:     signer.Address(),
 	}, nil
 }
 
@@ -49,31 +45,41 @@ func (b *TxBuild) Sender() common.Address {
 	return b.fromAddress
 }
 
-func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (common.Hash, error) {
-	nonce, err := b.client.PendingNonceAt(ctx, b.Sender())
+func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error) {
+	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
-		return common.Hash{}, err
+		panic(err)
 	}
 
-	gasLimit := uint64(21000)
-	gasPrice, err := b.client.SuggestGasPrice(ctx)
-	if err != nil {
-		return common.Hash{}, err
-	}
+	buf := make([]byte, 16)
+	value.FillBytes(buf)
+
+	leastSignificant64 := binary.BigEndian.Uint64(buf[8:])
+	mostSignificant64 := binary.BigEndian.Uint64(buf[:8])
 
 	toAddress := common.HexToAddress(to)
-	unsignedTx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		To:       &toAddress,
-		Value:    value,
-		Gas:      gasLimit,
-		GasPrice: gasPrice,
-	})
-
-	signedTx, err := types.SignTx(unsignedTx, b.signer, b.privateKey)
-	if err != nil {
-		return common.Hash{}, err
+	unsignedTx := &sqproto.UnsignedTransaction{
+		Nonce: nonce,
+		Actions: []*sqproto.Action{
+			{
+				Value: &sqproto.Action_TransferAction{
+					TransferAction: &sqproto.TransferAction{
+						To: toAddress.Bytes(),
+						Amount: &sqproto.Uint128{
+							Lo: leastSignificant64,
+							Hi: mostSignificant64,
+						},
+					},
+				},
+			},
+		},
 	}
 
-	return signedTx.Hash(), b.client.SendTransaction(ctx, signedTx)
+	signedTx, err := b.signer.SignTransaction(unsignedTx)
+	if err != nil {
+		panic(err)
+	}
+	result, err := b.sequencerClient.BroadcastTxSync(ctx, signedTx)
+
+	return result.Hash, err
 }
