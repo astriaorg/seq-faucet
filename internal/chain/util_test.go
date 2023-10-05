@@ -1,8 +1,6 @@
 package chain
 
 import (
-	"math/big"
-	"reflect"
 	"testing"
 )
 
@@ -32,18 +30,22 @@ func TestIsValidAddress(t *testing.T) {
 	}
 }
 
-func TestEtherToWei(t *testing.T) {
+func TestHas0xPrefix(t *testing.T) {
+	type args struct {
+		str string
+	}
 	tests := []struct {
-		name   string
-		amount int64
-		want   *big.Int
+		name string
+		args args
+		want bool
 	}{
-		{name: "1ether", amount: 1, want: new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)},
+		{name: "has 0x prefix", args: args{str: "0xab5801a7d398351b8be11c439e05c5b3259aec9b"}, want: true},
+		{name: "has no 0X prefix", args: args{str: "ab5801a7d398351b8be11c439e05c5b3259aec9b"}, want: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := EtherToWei(tt.amount); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("EtherToWei() = %v, want %v", got, tt.want)
+			if got := Has0xPrefix(tt.args.str); got != tt.want {
+				t.Errorf("Has0xPrefix() = %v, want %v", got, tt.want)
 			}
 		})
 	}
