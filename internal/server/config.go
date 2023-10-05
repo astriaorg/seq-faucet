@@ -1,10 +1,14 @@
 package server
 
+import (
+	"math/big"
+)
+
 type Config struct {
 	network    string
 	httpPort   int
 	interval   int
-	payout     int
+	payout     *big.Int
 	proxyCount int
 	queueCap   int
 }
@@ -14,7 +18,7 @@ func NewConfig(network string, httpPort, interval, payout, proxyCount, queueCap 
 		network:    network,
 		httpPort:   httpPort,
 		interval:   interval,
-		payout:     payout,
+		payout:     big.NewInt(int64(payout)),
 		proxyCount: proxyCount,
 		queueCap:   queueCap,
 	}

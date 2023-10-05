@@ -11,7 +11,7 @@
     payout: 1,
   };
 
-  $: document.title = `RIA ${capitalize(faucetInfo.network)} Faucet`;
+  $: document.title = `RIA ${faucetInfo.network} Faucet`;
 
   onMount(async () => {
     const res = await fetch('/api/info');
@@ -62,11 +62,6 @@
     let { msg } = await res.json();
     let type = res.ok ? 'is-success' : 'is-warning';
     toast({ message: msg, type });
-  }
-
-  function capitalize(str) {
-    const lower = str.toLowerCase();
-    return str.charAt(0).toUpperCase() + lower.slice(1);
   }
 </script>
 
