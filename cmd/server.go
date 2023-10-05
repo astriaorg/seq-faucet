@@ -70,6 +70,10 @@ func getPrivateKeyFromFlag() (*ed25519.PrivateKey, error) {
 		return nil, err
 	}
 
-	privateKey := ed25519.PrivateKey(privateKeyBytes)
+	if len(privateKeyBytes) != ed25519.SeedSize {
+		return nil, fmt.Errorf("invalid private key length, expected 32: %d", len(privateKeyBytes))
+	}
+
+	privateKey := ed25519.NewKeyFromSeed(privateKeyBytes)
 	return &privateKey, nil
 }
