@@ -6,8 +6,9 @@ import (
 	"encoding/binary"
 	"math/big"
 
+	primproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/primitive/v1"
+	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
 	client "github.com/astriaorg/go-sequencer-client/client"
-	sqproto "github.com/astriaorg/go-sequencer-client/proto"
 	"github.com/cometbft/cometbft/libs/bytes"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -65,10 +66,11 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 				Value: &sqproto.Action_TransferAction{
 					TransferAction: &sqproto.TransferAction{
 						To: toAddress.Bytes(),
-						Amount: &sqproto.Uint128{
+						Amount: &primproto.Uint128{
 							Lo: leastSignificant64,
 							Hi: mostSignificant64,
 						},
+						AssetId: client.DefaultAstriaAssetID[:],
 					},
 				},
 			},
