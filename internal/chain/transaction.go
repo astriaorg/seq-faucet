@@ -3,7 +3,6 @@ package chain
 import (
 	"context"
 	"crypto/ed25519"
-	"crypto/sha256"
 	"encoding/binary"
 	"math/big"
 
@@ -13,12 +12,6 @@ import (
 	"github.com/cometbft/cometbft/libs/bytes"
 
 	"github.com/ethereum/go-ethereum/common"
-)
-
-const DEFAULT_ASTRIA_ASSET = "nria"
-
-var (
-	DefaultAstriaAssetID = sha256.Sum256([]byte(DEFAULT_ASTRIA_ASSET))
 )
 
 type TxBuilder interface {
@@ -77,7 +70,7 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 							Lo: leastSignificant64,
 							Hi: mostSignificant64,
 						},
-						AssetId: DefaultAstriaAssetID[:],
+						AssetId: client.DefaultAstriaAssetID[:],
 					},
 				},
 			},
