@@ -2,14 +2,14 @@ package chain
 
 import (
 	"context"
-	"crypto/sha256"
 	"crypto/ed25519"
+	"crypto/sha256"
 	"encoding/binary"
 	"math/big"
 
-	client "github.com/astriaorg/go-sequencer-client/client"
-	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
 	primproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/primitive/v1"
+	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
+	client "github.com/astriaorg/go-sequencer-client/client"
 	"github.com/cometbft/cometbft/libs/bytes"
 
 	"github.com/ethereum/go-ethereum/common"
