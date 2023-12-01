@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/LK4D4/trylock v0.0.0-20191027065348-ff7e133a5c54
 	github.com/agiledragon/gomonkey/v2 v2.9.0
-	github.com/astriaorg/go-sequencer-client v0.0.0-20230926140906-b52311b219a1
+	github.com/astriaorg/go-sequencer-client v0.0.0-20231201013457-0df599de8e74
 	github.com/ethereum/go-ethereum v1.10.26
 	github.com/jellydator/ttlcache/v2 v2.11.1
 	github.com/sirupsen/logrus v1.9.0
@@ -13,6 +13,12 @@ require (
 )
 
 require (
+	buf.build/gen/go/astria/astria/protocolbuffers/go v1.31.0-20231130012811-2fd7e6d46ebd.2 // indirect
+	buf.build/gen/go/cosmos/cosmos-proto/protocolbuffers/go v1.31.0-20211202220400-1935555c206d.2 // indirect
+	buf.build/gen/go/cosmos/cosmos-sdk/protocolbuffers/go v1.31.0-20230719110346-aa25660f4ff7.2 // indirect
+	buf.build/gen/go/cosmos/gogo-proto/protocolbuffers/go v1.31.0-20230509103710-5e5b9fdd0180.2 // indirect
+	buf.build/gen/go/cosmos/ibc/protocolbuffers/go v1.31.0-20230913112312-7ab44ae956a0.2 // indirect
+	buf.build/gen/go/penumbra-zone/penumbra/protocolbuffers/go v1.31.0-20231120132728-bc443669626d.2 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
 	github.com/VictoriaMetrics/fastcache v1.6.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -62,6 +68,6 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect
 	google.golang.org/grpc v1.52.0 // indirect
-	google.golang.org/protobuf v1.28.2-0.20220831092852-f930b1dc76e8 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )

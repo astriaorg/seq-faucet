@@ -2,15 +2,23 @@ package chain
 
 import (
 	"context"
+	"crypto/sha256"
 	"crypto/ed25519"
 	"encoding/binary"
 	"math/big"
 
 	client "github.com/astriaorg/go-sequencer-client/client"
-	sqproto "github.com/astriaorg/go-sequencer-client/proto"
+	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
+	primproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/primitive/v1"
 	"github.com/cometbft/cometbft/libs/bytes"
 
 	"github.com/ethereum/go-ethereum/common"
+)
+
+const DEFAULT_ASTRIA_ASSET = "nria"
+
+var (
+	DefaultAstriaAssetID = sha256.Sum256([]byte(DEFAULT_ASTRIA_ASSET))
 )
 
 type TxBuilder interface {
@@ -65,10 +73,11 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 				Value: &sqproto.Action_TransferAction{
 					TransferAction: &sqproto.TransferAction{
 						To: toAddress.Bytes(),
-						Amount: &sqproto.Uint128{
+						Amount: &primproto.Uint128{
 							Lo: leastSignificant64,
 							Hi: mostSignificant64,
 						},
+						AssetId: DefaultAstriaAssetID[:],
 					},
 				},
 			},
