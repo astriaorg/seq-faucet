@@ -70,7 +70,7 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 							Lo: leastSignificant64,
 							Hi: mostSignificant64,
 						},
-						AssetId: client.DefaultAstriaAssetID[:],
+						AssetId:    client.DefaultAstriaAssetID[:],
 						FeeAssetId: client.DefaultAstriaAssetID[:],
 					},
 				},
