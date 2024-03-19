@@ -7,7 +7,7 @@ import (
 	"math/big"
 
 	primproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/primitive/v1"
-	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
+	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1"
 	client "github.com/astriaorg/go-sequencer-client/client"
 	"github.com/cometbft/cometbft/libs/bytes"
 
