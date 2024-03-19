@@ -7,7 +7,7 @@ import (
 	"math/big"
 
 	primproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/primitive/v1"
-	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1alpha1"
+	sqproto "buf.build/gen/go/astria/astria/protocolbuffers/go/astria/sequencer/v1"
 	client "github.com/astriaorg/go-sequencer-client/client"
 	"github.com/cometbft/cometbft/libs/bytes"
 
@@ -70,7 +70,8 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 							Lo: leastSignificant64,
 							Hi: mostSignificant64,
 						},
-						AssetId: client.DefaultAstriaAssetID[:],
+						AssetId:    client.DefaultAstriaAssetID[:],
+						FeeAssetId: client.DefaultAstriaAssetID[:],
 					},
 				},
 			},
