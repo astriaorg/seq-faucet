@@ -20,7 +20,7 @@ func NewConfig(network string, httpPort, interval, payout, proxyCount, queueCap 
 		httpPort:   httpPort,
 		interval:   interval,
 		payout:     big.NewInt(int64(payout)),
-		payoutNano:     big.NewInt(int64(payout * 1e9)),
+		payoutNano: big.NewInt(int64(payout * 1e9)),
 		proxyCount: proxyCount,
 		queueCap:   queueCap,
 	}
