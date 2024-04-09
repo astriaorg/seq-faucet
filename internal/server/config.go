@@ -9,6 +9,7 @@ type Config struct {
 	httpPort   int
 	interval   int
 	payout     *big.Int
+	payoutNano *big.Int
 	proxyCount int
 	queueCap   int
 }
@@ -19,6 +20,7 @@ func NewConfig(network string, httpPort, interval, payout, proxyCount, queueCap 
 		httpPort:   httpPort,
 		interval:   interval,
 		payout:     big.NewInt(int64(payout)),
+		payoutNano:     big.NewInt(int64(payout * 1e9)),
 		proxyCount: proxyCount,
 		queueCap:   queueCap,
 	}
