@@ -63,7 +63,7 @@ func (s *Server) consumeQueue() {
 	defer s.mutex.Unlock()
 	for len(s.queue) != 0 {
 		address := <-s.queue
-		txHash, err := s.Transfer(context.Background(), address, s.cfg.payout)
+		txHash, err := s.Transfer(context.Background(), address, s.cfg.payoutNano)
 		if err != nil {
 			log.WithError(err).Error("Failed to handle transaction in the queue")
 		} else {
@@ -102,7 +102,7 @@ func (s *Server) handleClaim() http.HandlerFunc {
 
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		txHash, err := s.Transfer(ctx, address, s.cfg.payout)
+		txHash, err := s.Transfer(ctx, address, s.cfg.payoutNano)
 		s.mutex.Unlock()
 		if err != nil {
 			log.WithError(err).Error("Failed to send transaction")
