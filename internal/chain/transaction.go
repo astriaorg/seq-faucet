@@ -74,13 +74,10 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 		},
 		Actions: []*txproto.Action{
 			{
-				Value: &sqproto.Action_TransferAction{
-					TransferAction: &sqproto.TransferAction{
-						To: toAddress.Bytes(),
-						Amount: &primproto.Uint128{
-							Lo: leastSignificant64,
-							Hi: mostSignificant64,
-						},
+				Value: &txproto.Action_TransferAction{
+					TransferAction: &txproto.TransferAction{
+						To:         toAddr,
+						Amount:     amount,
 						AssetId:    client.DefaultAstriaAssetID[:],
 						FeeAssetId: client.DefaultAstriaAssetID[:],
 					},
