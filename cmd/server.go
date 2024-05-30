@@ -24,6 +24,7 @@ var (
 	payoutFlag   = flag.Int("faucet.amount", 1, "Number of Sequencer tokens to transfer per user request")
 	intervalFlag = flag.Int("faucet.minutes", 1440, "Number of minutes to wait between funding rounds")
 	netnameFlag  = flag.String("faucet.name", "Astria Sequencer Network", "Network name to display on the frontend")
+	chainIdFlag  = flag.String("sequencer.chainId", "astria-dusk-7", "Sequencer chain id to use for transactions")
 
 	privKeyFlag  = flag.String("wallet.privkey", os.Getenv("PRIVATE_KEY"), "Private key hex to fund user requests with")
 	providerFlag = flag.String("wallet.provider", os.Getenv("WEB3_PROVIDER"), "Endpoint for Ethereum JSON-RPC connection")
@@ -43,7 +44,7 @@ func Execute() {
 		panic(fmt.Errorf("failed to read private key: %w", err))
 	}
 
-	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey)
+	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, *chainIdFlag)
 	if err != nil {
 		panic(fmt.Errorf("cannot connect to web3 provider: %w", err))
 	}
