@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/astriaorg/seq-faucet/internal/chain"
+	log "github.com/sirupsen/logrus"
 )
 
 type claimRequest struct {
@@ -83,10 +84,15 @@ func readAddress(r *http.Request) (string, error) {
 	if err := decodeJSONBody(r, &claimReq); err != nil {
 		return "", err
 	}
-	if !chain.IsValidAddress(claimReq.Address, false) {
-		return "", &malformedRequest{status: http.StatusBadRequest, message: "invalid address"}
+
+	if !chain.IsBech32M(claimReq.Address) {
+		return "", &malformedRequest{status: http.StatusBadRequest, message: "Invalid address"}
 	}
 
+	// add verification to check if the address is valid
+
+	log.WithFields(log.Fields{
+		"address": claimReq.Address}).Info("Received claim request")
 	return claimReq.Address, nil
 }
 

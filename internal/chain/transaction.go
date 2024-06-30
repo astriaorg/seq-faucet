@@ -8,14 +8,15 @@ import (
 
 	primproto "buf.build/gen/go/astria/primitives/protocolbuffers/go/astria/primitive/v1"
 	txproto "buf.build/gen/go/astria/protocol-apis/protocolbuffers/go/astria/protocol/transactions/v1alpha1"
-	client "github.com/astriaorg/go-sequencer-client/client"
+	client "github.com/astriaorg/astria-cli-go/modules/go-sequencer-client/client"
 	"github.com/cometbft/cometbft/libs/bytes"
-
-	"github.com/ethereum/go-ethereum/common"
+	log "github.com/sirupsen/logrus"
 )
 
+const PREFIX = "astria"
+
 type TxBuilder interface {
-	Sender() common.Address
+	Sender() string
 	Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error)
 }
 
@@ -23,7 +24,7 @@ type TxBuild struct {
 	sequencerClient  client.Client
 	privateKey       *ed25519.PrivateKey
 	signer           client.Signer
-	fromAddress      common.Address
+	fromAddress      string
 	sequencerChainId string
 }
 
@@ -34,37 +35,38 @@ func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId strin
 	}
 
 	signer := client.NewSigner(*privateKey)
+	fromAddress, err := Bech32MFromBytes(PREFIX, signer.Address())
+	if err != nil {
+		return nil, err
+	}
 
 	return &TxBuild{
 		sequencerClient:  *sequencerClient,
 		privateKey:       privateKey,
 		signer:           *signer,
-		fromAddress:      signer.Address(),
+		fromAddress:      fromAddress.Address,
 		sequencerChainId: chainId,
 	}, nil
 }
 
-func (b *TxBuild) Sender() common.Address {
+func (b *TxBuild) Sender() string {
 	return b.fromAddress
 }
 
 func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error) {
+
 	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
 		panic(err)
 	}
 
-	buf := make([]byte, 16)
-	value.FillBytes(buf)
-
 	amount, err := convertToUint128(value)
 	if err != nil {
 		panic(err)
 	}
-
-	toAddress := common.HexToAddress(to)
+	log.Infof("Transfering %s to %s", amount, to)
 	toAddr := &primproto.Address{
-		Inner: toAddress.Bytes(),
+		Bech32M: to,
 	}
 
 	unsignedTx := &txproto.UnsignedTransaction{
@@ -76,10 +78,10 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 			{
 				Value: &txproto.Action_TransferAction{
 					TransferAction: &txproto.TransferAction{
-						To:         toAddr,
-						Amount:     amount,
-						AssetId:    client.DefaultAstriaAssetID[:],
-						FeeAssetId: client.DefaultAstriaAssetID[:],
+						To:       toAddr,
+						Amount:   amount,
+						Asset:    "nria",
+						FeeAsset: "nria",
 					},
 				},
 			},
