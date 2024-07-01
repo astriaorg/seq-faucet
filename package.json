@@ -1,5 +1,8 @@
 {
   "scripts": {
     "build-web": "cd web && yarn install && yarn vite build"
+  },
+  "dependencies": {
+    "bech32": "^2.0.0"
   }
 }

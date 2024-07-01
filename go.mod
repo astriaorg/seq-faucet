@@ -3,10 +3,11 @@ module github.com/astriaorg/seq-faucet
 go 1.21
 
 require (
-	buf.build/gen/go/astria/primitives/protocolbuffers/go v1.34.1-20240517150107-e54d335d6779.1
-	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.1-20240517150110-b4ffcca70a25.1
+	buf.build/gen/go/astria/primitives/protocolbuffers/go v1.34.2-20240626163506-691883836b9e.2
+	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.2-20240627184145-2eaea785eb7d.2
 	github.com/LK4D4/trylock v0.0.0-20191027065348-ff7e133a5c54
-	github.com/astriaorg/go-sequencer-client v0.4.0
+	github.com/astriaorg/astria-cli-go/modules/go-sequencer-client v0.0.0-20240630141218-e9b3ec7a77a3
+	github.com/btcsuite/btcd/btcutil v1.1.5
 	github.com/cometbft/cometbft v0.38.7
 	github.com/ethereum/go-ethereum v1.13.15
 	github.com/jellydator/ttlcache/v2 v2.11.1
@@ -63,6 +64,6 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.60.0 // indirect
-	google.golang.org/protobuf v1.34.1 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { getAddress } from '@ethersproject/address';
+  import { bech32 } from 'bech32';
   import { CloudflareProvider } from '@ethersproject/providers';
   import { setDefaults as setToast, toast } from 'bulma-toast';
 
@@ -41,14 +41,6 @@
         return;
       }
     }
-
-    try {
-      address = getAddress(address);
-    } catch (error) {
-      toast({ message: error.reason, type: 'is-warning' });
-      return;
-    }
-
     const res = await fetch('/api/claim', {
       method: 'POST',
       headers: {
@@ -58,7 +50,6 @@
         address,
       }),
     });
-
     let { msg } = await res.json();
     let type = res.ok ? 'is-success' : 'is-warning';
     toast({ message: msg, type });
