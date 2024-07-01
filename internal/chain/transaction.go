@@ -13,8 +13,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const PREFIX = "astria"
-
 type TxBuilder interface {
 	Sender() string
 	Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error)
@@ -28,14 +26,14 @@ type TxBuild struct {
 	sequencerChainId string
 }
 
-func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId string) (TxBuilder, error) {
+func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId string, prefix string) (TxBuilder, error) {
 	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
 	}
 
 	signer := client.NewSigner(*privateKey)
-	fromAddress, err := Bech32MFromBytes(PREFIX, signer.Address())
+	fromAddress, err := Bech32MFromBytes(prefix, signer.Address())
 	if err != nil {
 		return nil, err
 	}
