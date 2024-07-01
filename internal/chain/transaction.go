@@ -52,7 +52,6 @@ func (b *TxBuild) Sender() string {
 }
 
 func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (bytes.HexBytes, error) {
-
 	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
 		panic(err)
@@ -78,8 +77,8 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 					TransferAction: &txproto.TransferAction{
 						To:       toAddr,
 						Amount:   amount,
-						Asset:    "nria",
-						FeeAsset: "nria",
+						Asset:    client.DefaultAstriaAsset,
+						FeeAsset: client.DefaultAstriaAsset,
 					},
 				},
 			},
