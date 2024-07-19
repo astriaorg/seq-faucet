@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/astriaorg/seq-faucet/internal/chain"
+	"github.com/astriaorg/astria-cli-go/modules/bech32m"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -84,13 +84,10 @@ func readAddress(r *http.Request) (string, error) {
 	if err := decodeJSONBody(r, &claimReq); err != nil {
 		return "", err
 	}
-
-	if !chain.IsBech32M(claimReq.Address) {
+	err := bech32m.Validate(claimReq.Address)
+	if err != nil {
 		return "", &malformedRequest{status: http.StatusBadRequest, message: "Invalid address"}
 	}
-
-	// add verification to check if the address is valid
-
 	log.WithFields(log.Fields{
 		"address": claimReq.Address}).Info("Received claim request")
 	return claimReq.Address, nil

@@ -1,23 +1,26 @@
 module github.com/astriaorg/seq-faucet
 
-go 1.21
+go 1.22.2
+
+toolchain go1.22.5
 
 require (
 	buf.build/gen/go/astria/primitives/protocolbuffers/go v1.34.2-20240626163506-691883836b9e.2
-	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.2-20240627184145-2eaea785eb7d.2
+	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.2-20240709150132-719f5e6bd198.2
 	github.com/LK4D4/trylock v0.0.0-20191027065348-ff7e133a5c54
-	github.com/astriaorg/astria-cli-go/modules/go-sequencer-client v0.0.0-20240630141218-e9b3ec7a77a3
-	github.com/btcsuite/btcd/btcutil v1.1.5
-	github.com/cometbft/cometbft v0.38.7
+	github.com/astriaorg/astria-cli-go/modules/bech32m v0.0.0-20240719102244-9c858af4bf4c
+	github.com/astriaorg/astria-cli-go/modules/go-sequencer-client v0.0.0-20240711221144-628c2db1b0aa
+	github.com/cometbft/cometbft v0.38.9
 	github.com/ethereum/go-ethereum v1.13.15
 	github.com/jellydator/ttlcache/v2 v2.11.1
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/negroni v1.0.0
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2 // indirect
+	github.com/btcsuite/btcd/btcutil v1.1.5 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cometbft/cometbft-db v0.7.0 // indirect

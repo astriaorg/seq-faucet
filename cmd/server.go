@@ -24,7 +24,7 @@ var (
 	payoutFlag   = flag.Int("faucet.amount", 1, "Number of Sequencer tokens to transfer per user request")
 	intervalFlag = flag.Int("faucet.minutes", 1440, "Number of minutes to wait between funding rounds")
 	netnameFlag  = flag.String("faucet.name", "Astria Sequencer Network", "Network name to display on the frontend")
-	chainIdFlag  = flag.String("sequencer.chainId", "astria-dusk-8", "Sequencer chain id to use for transactions")
+	chainIdFlag  = flag.String("sequencer.chainId", "astria-dusk-9", "Sequencer chain id to use for transactions")
 	prefixFlag   = flag.String("bech32.prefix", "astria", "Bech32 prefix for the address")
 
 	privKeyFlag  = flag.String("wallet.privkey", os.Getenv("PRIVATE_KEY"), "Private key hex to fund user requests with")
