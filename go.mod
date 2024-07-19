@@ -11,7 +11,6 @@ require (
 	github.com/astriaorg/astria-cli-go/modules/bech32m v0.0.0-20240719102244-9c858af4bf4c
 	github.com/astriaorg/astria-cli-go/modules/go-sequencer-client v0.0.0-20240711221144-628c2db1b0aa
 	github.com/cometbft/cometbft v0.38.9
-	github.com/ethereum/go-ethereum v1.13.15
 	github.com/jellydator/ttlcache/v2 v2.11.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/negroni v1.0.0
@@ -40,9 +39,9 @@ require (
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
+	github.com/kr/pretty v0.3.1 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/oasisprotocol/curve25519-voi v0.0.0-20220708102147-0a8a51822cae // indirect

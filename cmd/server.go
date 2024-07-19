@@ -63,9 +63,6 @@ func getPrivateKeyFromFlag() (*ed25519.PrivateKey, error) {
 	}
 
 	hexkey := *privKeyFlag
-	if chain.Has0xPrefix(hexkey) {
-		hexkey = hexkey[2:]
-	}
 
 	privateKeyBytes, err := hex.DecodeString(hexkey)
 	if err != nil {
