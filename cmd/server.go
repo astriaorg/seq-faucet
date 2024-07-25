@@ -21,6 +21,7 @@ var (
 	queueCapFlag = flag.Int("queuecap", 100, "Maximum transactions waiting to be sent")
 	versionFlag  = flag.Bool("version", false, "Print version number")
 
+	assetFlag    = flag.String("faucet.asset", "nria", "Asset and feeAsset used for transactions")
 	payoutFlag   = flag.Int("faucet.amount", 1, "Number of Sequencer tokens to transfer per user request")
 	intervalFlag = flag.Int("faucet.minutes", 1440, "Number of minutes to wait between funding rounds")
 	netnameFlag  = flag.String("faucet.name", "Astria Sequencer Network", "Network name to display on the frontend")
@@ -45,7 +46,7 @@ func Execute() {
 		panic(fmt.Errorf("failed to read private key: %w", err))
 	}
 
-	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, *chainIdFlag, *prefixFlag)
+	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, *chainIdFlag, *prefixFlag, *assetFlag)
 	if err != nil {
 		panic(fmt.Errorf("cannot connect to web3 provider: %w", err))
 	}

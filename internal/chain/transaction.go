@@ -25,9 +25,10 @@ type TxBuild struct {
 	signer           client.Signer
 	fromAddress      string
 	sequencerChainId string
+	asset            string
 }
 
-func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId string, prefix string) (TxBuilder, error) {
+func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId string, prefix string, asset string) (TxBuilder, error) {
 	sequencerClient, err := client.NewClient(provider)
 	if err != nil {
 		return nil, err
@@ -45,6 +46,7 @@ func NewTxBuilder(provider string, privateKey *ed25519.PrivateKey, chainId strin
 		signer:           *signer,
 		fromAddress:      fromAddress.String(),
 		sequencerChainId: chainId,
+		asset:            asset,
 	}, nil
 }
 
@@ -78,8 +80,8 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 					TransferAction: &txproto.TransferAction{
 						To:       toAddr,
 						Amount:   amount,
-						Asset:    client.DefaultAstriaAsset,
-						FeeAsset: client.DefaultAstriaAsset,
+						Asset:    b.asset,
+						FeeAsset: b.asset,
 					},
 				},
 			},
