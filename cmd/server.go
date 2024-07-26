@@ -21,10 +21,12 @@ var (
 	queueCapFlag = flag.Int("queuecap", 100, "Maximum transactions waiting to be sent")
 	versionFlag  = flag.Bool("version", false, "Print version number")
 
+	assetFlag    = flag.String("faucet.asset", "nria", "Asset and feeAsset used for transactions")
 	payoutFlag   = flag.Int("faucet.amount", 1, "Number of Sequencer tokens to transfer per user request")
 	intervalFlag = flag.Int("faucet.minutes", 1440, "Number of minutes to wait between funding rounds")
 	netnameFlag  = flag.String("faucet.name", "Astria Sequencer Network", "Network name to display on the frontend")
-	chainIdFlag  = flag.String("sequencer.chainId", "astria-dusk-7", "Sequencer chain id to use for transactions")
+	chainIdFlag  = flag.String("sequencer.chainId", "astria-dusk-9", "Sequencer chain id to use for transactions")
+	prefixFlag   = flag.String("bech32.prefix", "astria", "Bech32 prefix for the address")
 
 	privKeyFlag  = flag.String("wallet.privkey", os.Getenv("PRIVATE_KEY"), "Private key hex to fund user requests with")
 	providerFlag = flag.String("wallet.provider", os.Getenv("WEB3_PROVIDER"), "Endpoint for Ethereum JSON-RPC connection")
@@ -44,7 +46,7 @@ func Execute() {
 		panic(fmt.Errorf("failed to read private key: %w", err))
 	}
 
-	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, *chainIdFlag)
+	txBuilder, err := chain.NewTxBuilder(*providerFlag, privateKey, *chainIdFlag, *prefixFlag, *assetFlag)
 	if err != nil {
 		panic(fmt.Errorf("cannot connect to web3 provider: %w", err))
 	}
@@ -62,9 +64,6 @@ func getPrivateKeyFromFlag() (*ed25519.PrivateKey, error) {
 	}
 
 	hexkey := *privKeyFlag
-	if chain.Has0xPrefix(hexkey) {
-		hexkey = hexkey[2:]
-	}
 
 	privateKeyBytes, err := hex.DecodeString(hexkey)
 	if err != nil {

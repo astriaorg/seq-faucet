@@ -9,7 +9,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/astriaorg/seq-faucet/internal/chain"
+	"github.com/astriaorg/astria-cli-go/modules/bech32m"
+	log "github.com/sirupsen/logrus"
 )
 
 type claimRequest struct {
@@ -83,10 +84,12 @@ func readAddress(r *http.Request) (string, error) {
 	if err := decodeJSONBody(r, &claimReq); err != nil {
 		return "", err
 	}
-	if !chain.IsValidAddress(claimReq.Address, false) {
-		return "", &malformedRequest{status: http.StatusBadRequest, message: "invalid address"}
+	err := bech32m.Validate(claimReq.Address)
+	if err != nil {
+		return "", &malformedRequest{status: http.StatusBadRequest, message: "Invalid address"}
 	}
-
+	log.WithFields(log.Fields{
+		"address": claimReq.Address}).Info("Received claim request")
 	return claimReq.Address, nil
 }
 

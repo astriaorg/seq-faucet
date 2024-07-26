@@ -1,22 +1,25 @@
 module github.com/astriaorg/seq-faucet
 
-go 1.21
+go 1.22.2
+
+toolchain go1.22.5
 
 require (
-	buf.build/gen/go/astria/primitives/protocolbuffers/go v1.34.1-20240517150107-e54d335d6779.1
-	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.1-20240517150110-b4ffcca70a25.1
+	buf.build/gen/go/astria/primitives/protocolbuffers/go v1.34.2-20240626163506-691883836b9e.2
+	buf.build/gen/go/astria/protocol-apis/protocolbuffers/go v1.34.2-20240709150132-719f5e6bd198.2
 	github.com/LK4D4/trylock v0.0.0-20191027065348-ff7e133a5c54
-	github.com/astriaorg/go-sequencer-client v0.4.0
-	github.com/cometbft/cometbft v0.38.7
-	github.com/ethereum/go-ethereum v1.13.15
+	github.com/astriaorg/astria-cli-go/modules/bech32m v0.0.0-20240719102244-9c858af4bf4c
+	github.com/astriaorg/astria-cli-go/modules/go-sequencer-client v0.0.0-20240711221144-628c2db1b0aa
+	github.com/cometbft/cometbft v0.38.9
 	github.com/jellydator/ttlcache/v2 v2.11.1
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/negroni v1.0.0
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2 // indirect
+	github.com/btcsuite/btcd/btcutil v1.1.5 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/cometbft/cometbft-db v0.7.0 // indirect
@@ -36,9 +39,9 @@ require (
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/holiman/uint256 v1.2.4 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
+	github.com/kr/pretty v0.3.1 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/oasisprotocol/curve25519-voi v0.0.0-20220708102147-0a8a51822cae // indirect
@@ -63,6 +66,6 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.60.0 // indirect
-	google.golang.org/protobuf v1.34.1 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
