@@ -1,5 +1,5 @@
 FROM node:lts-alpine as frontend
-LABEL org.opencontainers.image.source https://github.com/astriaorg/seq-faucet
+LABEL org.opencontainers.image.source=https://github.com/astriaorg/seq-faucet
 
 WORKDIR /frontend-build
 
@@ -9,7 +9,7 @@ RUN yarn install
 COPY web ./
 RUN yarn build
 
-FROM golang:1.21-alpine as backend
+FROM golang:1.22.5-alpine as backend
 
 RUN apk add --no-cache gcc musl-dev linux-headers
 
