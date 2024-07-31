@@ -120,5 +120,7 @@ func convertToUint128(num *big.Int) (*primproto.Uint128, error) {
 		Hi: hi,
 	}
 
+	log.Infof("DEBUG: value after conversion is %s", num)
+
 	return uint128, nil
 }
