@@ -58,7 +58,7 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
 		panic(err)
-	}	
+	}
 
 	amount, err := convertToUint128(value)
 	if err != nil {
