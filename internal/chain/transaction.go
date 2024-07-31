@@ -58,9 +58,7 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 	nonce, err := b.sequencerClient.GetNonce(ctx, b.fromAddress)
 	if err != nil {
 		panic(err)
-	}
-	log.Infof("DEBUG: value passed into transfer is %s", value)
-	
+	}	
 
 	amount, err := convertToUint128(value)
 	if err != nil {
@@ -119,8 +117,6 @@ func convertToUint128(num *big.Int) (*primproto.Uint128, error) {
 		Lo: lo,
 		Hi: hi,
 	}
-
-	log.Infof("DEBUG: value after conversion is %s", num)
 
 	return uint128, nil
 }
