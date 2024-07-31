@@ -59,6 +59,7 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 	if err != nil {
 		panic(err)
 	}
+	log.Infof("DEBUG: value passed into transfer is %s", value)
 
 	amount, err := convertToUint128(value)
 	if err != nil {
