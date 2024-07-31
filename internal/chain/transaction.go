@@ -98,7 +98,8 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 }
 
 // convertToUint128 converts a string to a Uint128 protobuf
-func convertToUint128(numStr *big.Int) (*primproto.Uint128, error) {
+func convertToUint128(num *big.Int) (*primproto.Uint128, error) {
+	numStr := new(big.Int).Set(num)
 
 	// check if the number is negative or overflows Uint128
 	if numStr.Sign() < 0 {
