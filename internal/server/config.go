@@ -1,27 +1,28 @@
 package server
 
 import (
+	"math"
 	"math/big"
 )
 
 type Config struct {
-	network    string
-	httpPort   int
-	interval   int
-	payout     *big.Int
-	payoutNano *big.Int
-	proxyCount int
-	queueCap   int
+	network      string
+	httpPort     int
+	interval     int
+	payout       *big.Int
+	payoutAmount *big.Int
+	proxyCount   int
+	queueCap     int
 }
 
-func NewConfig(network string, httpPort, interval, payout, proxyCount, queueCap int) *Config {
+func NewConfig(network string, httpPort, interval, payout, precision, proxyCount, queueCap int) *Config {
 	return &Config{
-		network:    network,
-		httpPort:   httpPort,
-		interval:   interval,
-		payout:     big.NewInt(int64(payout)),
-		payoutNano: big.NewInt(int64(payout * 1e9)),
-		proxyCount: proxyCount,
-		queueCap:   queueCap,
+		network:      network,
+		httpPort:     httpPort,
+		interval:     interval,
+		payout:       big.NewInt(int64(payout)),
+		payoutAmount: big.NewInt(int64(payout * int(math.Pow10(precision)))),
+		proxyCount:   proxyCount,
+		queueCap:     queueCap,
 	}
 }
