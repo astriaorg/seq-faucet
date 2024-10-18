@@ -7,7 +7,7 @@ import (
 	"math/big"
 
 	primproto "buf.build/gen/go/astria/primitives/protocolbuffers/go/astria/primitive/v1"
-	txproto "buf.build/gen/go/astria/protocol-apis/protocolbuffers/go/astria/protocol/transactions/v1alpha1"
+	txproto "buf.build/gen/go/astria/protocol-apis/protocolbuffers/go/astria/protocol/transaction/v1"
 	"github.com/astriaorg/astria-cli-go/modules/bech32m"
 	client "github.com/astriaorg/astria-cli-go/modules/go-sequencer-client/client"
 	"github.com/cometbft/cometbft/libs/bytes"
@@ -69,15 +69,15 @@ func (b *TxBuild) Transfer(ctx context.Context, to string, value *big.Int) (byte
 		Bech32M: to,
 	}
 
-	unsignedTx := &txproto.UnsignedTransaction{
+	unsignedTx := &txproto.TransactionBody{
 		Params: &txproto.TransactionParams{
 			Nonce:   nonce,
 			ChainId: b.sequencerChainId,
 		},
 		Actions: []*txproto.Action{
 			{
-				Value: &txproto.Action_TransferAction{
-					TransferAction: &txproto.TransferAction{
+				Value: &txproto.Action_Transfer{
+					Transfer: &txproto.Transfer{
 						To:       toAddr,
 						Amount:   amount,
 						Asset:    b.asset,
